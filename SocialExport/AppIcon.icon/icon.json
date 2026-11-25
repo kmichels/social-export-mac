@@ -1,0 +1,93 @@
+{
+  "fill": {
+    "linear-gradient": [
+      "srgb:0.23137,0.61176,0.96078,1.00000",
+      "srgb:0.04314,0.30980,0.70196,1.00000"
+    ]
+  },
+  "fill-specializations": [
+    {
+      "appearance": "dark",
+      "value": {
+        "linear-gradient": [
+          "srgb:0.13725,0.42745,0.75294,1.00000",
+          "srgb:0.02745,0.18824,0.45098,1.00000"
+        ]
+      }
+    }
+  ],
+  "groups": [
+    {
+      "name": "Photo",
+      "layers": [
+        {
+          "name": "Landscape",
+          "glass": false,
+          "image-name-specializations": [
+            {
+              "value": "landscape.svg"
+            },
+            {
+              "appearance": "tinted",
+              "value": "landscape-mono.svg"
+            }
+          ]
+        },
+        {
+          "name": "Tile",
+          "glass": true,
+          "image-name-specializations": [
+            {
+              "value": "tile.svg"
+            },
+            {
+              "appearance": "tinted",
+              "value": "tile-mono.svg"
+            }
+          ]
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.5
+      },
+      "specular": true,
+      "translucency": {
+        "enabled": true,
+        "value": 0.5
+      }
+    },
+    {
+      "name": "Badge",
+      "layers": [
+        {
+          "name": "Badge",
+          "glass": true,
+          "image-name-specializations": [
+            {
+              "value": "badge.svg"
+            },
+            {
+              "appearance": "tinted",
+              "value": "badge-mono.svg"
+            }
+          ]
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.5
+      },
+      "specular": true,
+      "translucency": {
+        "enabled": true,
+        "value": 0.5
+      }
+    }
+  ],
+  "supported-platforms": {
+    "squares": [
+      "macOS"
+    ]
+  }
+}

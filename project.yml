@@ -1,0 +1,113 @@
+name: SocialExport
+options:
+  bundleIdPrefix: com.tonalphoto
+  deploymentTarget:
+    macOS: "27.0"
+  xcodeVersion: "27.1"
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+settings:
+  configs:
+    Release:
+      OTHER_CODE_SIGN_FLAGS: "--timestamp"
+      CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    MACOSX_DEPLOYMENT_TARGET: "27.0"
+    MARKETING_VERSION: "1.0.2"
+    CURRENT_PROJECT_VERSION: "4"
+    DEVELOPMENT_TEAM: 85QL287QYW
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "Developer ID Application"
+    ENABLE_HARDENED_RUNTIME: YES
+    GENERATE_INFOPLIST_FILE: NO
+    SWIFT_EMIT_LOC_STRINGS: NO
+packages:
+  SocialExportCore:
+    path: .
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    exactVersion: 2.10.1
+targets:
+  SocialExport:
+    type: application
+    platform: macOS
+    sources:
+      - path: SocialExport/Sources
+        excludes: ["**/.tdd-optional"]
+      - path: SocialExport/Assets.xcassets
+      - path: SocialExport/AppIcon.icon
+        buildPhase: resources
+    dependencies:
+      - package: SocialExportCore
+      - package: Sparkle
+      - target: SocialExportExtension
+    entitlements:
+      path: SocialExport/SocialExport.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.application-groups: [85QL287QYW.com.tonalphoto.socialexport]
+        com.apple.security.assets.pictures.read-write: true
+        com.apple.security.network.client: true
+        com.apple.security.temporary-exception.mach-lookup.global-name:
+          - $(PRODUCT_BUNDLE_IDENTIFIER)-spks
+          - $(PRODUCT_BUNDLE_IDENTIFIER)-spki
+    info:
+      path: SocialExport/Info.plist
+      properties:
+        CFBundleName: Social Export
+        CFBundleDisplayName: Social Export
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
+        NSHumanReadableCopyright: "Konrad Michels"
+        LSApplicationCategoryType: public.app-category.photography
+        SUFeedURL: https://apps.tonalphoto.com/social-export/appcast.xml
+        SUPublicEDKey: a/zMBwT0fy06j96GGLvdUGNgmf3IieLxPqYoHQFrY7g=
+        SUEnableInstallerLauncherService: true
+        SUEnableAutomaticChecks: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tonalphoto.socialexport
+        PRODUCT_NAME: Social Export
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+  SocialExportExtension:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: SocialExportExtension/Sources
+        excludes: ["**/.tdd-optional"]
+      - path: SocialExport/AppIcon.icon
+        buildPhase: resources
+    dependencies:
+      - package: SocialExportCore
+    entitlements:
+      path: SocialExportExtension/SocialExportExtension.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.application-groups: [85QL287QYW.com.tonalphoto.socialexport]
+        com.apple.security.assets.pictures.read-write: true
+        com.apple.security.network.client: true
+    info:
+      path: SocialExportExtension/Info.plist
+      properties:
+        CFBundleName: Social Export
+        CFBundleDisplayName: Social Export
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSHumanReadableCopyright: "Konrad Michels"
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.share-services
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShareViewController
+          NSExtensionAttributes:
+            NSExtensionActivationRule:
+              NSExtensionActivationSupportsImageWithMaxCount: 50
+              NSExtensionActivationSupportsMovieWithMaxCount: 50
+              NSExtensionActivationSupportsFileWithMaxCount: 50
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tonalphoto.socialexport.share
+        PRODUCT_NAME: SocialExportExtension
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon

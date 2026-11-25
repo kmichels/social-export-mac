@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b9cf5"/><stop offset="1" stop-color="#0b4fb3"/></linearGradient>
+    <linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.42"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+    <filter id="b" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="18"/></filter>
+    <clipPath id="c"><rect x="0" y="0" width="1024" height="1024" rx="229"/></clipPath>
+  </defs>
+  <rect x="0" y="0" width="1024" height="1024" rx="229" fill="url(#g)"/>
+  <g clip-path="url(#c)"><ellipse cx="512" cy="40" rx="620" ry="300" fill="url(#s)" filter="url(#b)"/><ellipse cx="512" cy="1080" rx="560" ry="220" fill="#000" opacity="0.14" filter="url(#b)"/></g>
+  <rect x="14" y="14" width="996" height="996" rx="216" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="12"/>
+  <rect x="208" y="252" width="560" height="440" rx="64" fill="#ffffff"/>
+  <path d="M252 664 L404 480 L484 572 L566 468 L724 664 Z" fill="#0b4fb3" opacity="0.9"/>
+  <circle cx="642" cy="372" r="44" fill="#0b4fb3" opacity="0.9"/>
+  <circle cx="712" cy="690" r="150" fill="#0b4fb3"/>
+  <circle cx="712" cy="690" r="150" fill="none" stroke="#ffffff" stroke-width="26"/>
+  <g fill="none" stroke="#ffffff" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"><path d="M712 770 V610"/><path d="M650 672 L712 610 L774 672"/></g>
+</svg>
