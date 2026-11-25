@@ -7,7 +7,7 @@ final class ExportSpecTests: XCTestCase {
         XCTAssertEqual(specs.map(\.id), ["instagram", "threads", "facebook"])
         XCTAssertEqual(specs.map(\.folder), ["instagram", "threads", "facebook"])
         XCTAssertEqual(specs.map(\.rule), [.width(1080), .width(1080), .longEdge(2048)])
-        XCTAssertEqual(specs.map(\.quality), [0.85, 0.85, 0.85])
+        XCTAssertEqual(specs.map(\.quality), [0.85, 0.85, 0.95])
     }
 
     func testSpecRoundTripsJSON() throws {

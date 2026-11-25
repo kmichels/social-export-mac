@@ -23,6 +23,6 @@ public struct ExportSpec: Codable, Equatable, Sendable, Identifiable {
     public static let defaults: [ExportSpec] = [
         ExportSpec(id: "instagram", folder: "instagram", rule: .width(1080), quality: 0.85),
         ExportSpec(id: "threads", folder: "threads", rule: .width(1080), quality: 0.85),
-        ExportSpec(id: "facebook", folder: "facebook", rule: .longEdge(2048), quality: 0.85),
+        ExportSpec(id: "facebook", folder: "facebook", rule: .longEdge(2048), quality: 0.95),
     ]
 }

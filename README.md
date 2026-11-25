@@ -30,7 +30,7 @@ Signed and notarized builds, with automatic updates: <https://apps.tonalphoto.co
 |-----------|-----------------------|--------------|
 | Instagram | 1080 px wide          | 0.85         |
 | Threads   | 1080 px wide          | 0.85         |
-| Facebook  | 2048 px longest edge  | 0.85 in 1.0.2, 0.95 from the next release |
+| Facebook  | 2048 px longest edge  | 0.95 (0.85 up to 1.0.2) |
 
 For every platform:
 
