@@ -22,6 +22,13 @@ final class OutputPathTests: XCTestCase {
         XCTAssertEqual(url, root.appending(path: "facebook/2026.10.29 beach.jpg"))
     }
 
+    func testTIFFSpecUsesTif() {
+        var spec = ExportSpec.defaults[2]
+        spec.format = .tiff8
+        let url = OutputPath.url(root: root, spec: spec, inputFilename: "B0038375.jpeg")
+        XCTAssertEqual(url, root.appending(path: "facebook/B0038375.tif"))
+    }
+
     func testEnsureDirectoryCreatesNested() throws {
         let url = root.appending(path: "threads/x.jpg")
         try OutputPath.ensureDirectory(for: url)

@@ -57,6 +57,8 @@ final class ShareViewController: NSViewController {
         async let nudge = checker.suffix()
         let (files, skipped, notes) = await ItemLoader.load(providers, into: dir)
         guard !Task.isCancelled else { return "" }   // sheet dismissed while loading: nothing is written, nothing is posted
+        // Header-only probe of what Photos/Finder actually handed over (format, size, JPEG quality), for the log.
+        let inputs = files.map(InputProbe.describe)
         let specs = SpecStore(defaults: groupDefaults).load()
         let result = await ExportRun.run(inputs: files, specs: specs, root: SpecStore.outputRoot, skipped: skipped)
         let suffix = await nudge
@@ -64,7 +66,7 @@ final class ShareViewController: NSViewController {
         if result.failures.isEmpty, !result.written.isEmpty, let suffix { text += suffix }
         let summary = "share finished in \(String(format: "%.2f", Date().timeIntervalSince(start)))s: \(text)"
         Logger(subsystem: "com.tonalphoto.socialexport", category: "extension").info("\(summary, privacy: .public)")
-        appendDiagnostic("\(Date()) items=\(providers.count) types=\(types) loaded=\(files.map(\.lastPathComponent)) notes=\(notes) nudge=\(suffix ?? "none") \(summary)")
+        appendDiagnostic("\(Date()) items=\(providers.count) types=\(types) loaded=\(files.map(\.lastPathComponent)) inputs=\(inputs) formats=\(specs.map { "\($0.id):\($0.format.rawValue)" }) notes=\(notes) nudge=\(suffix ?? "none") \(summary)")
         return text
     }
 

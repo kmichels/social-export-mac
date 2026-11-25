@@ -30,6 +30,17 @@ final class ExportRunTests: XCTestCase {
         XCTAssertEqual(result.notificationText, "Exported 2 photos to Socials")
     }
 
+    func testMixedFormatsWriteJpgAndTif() async {
+        let a = Fixtures.make(width: 1600, height: 1200, name: "a", in: dir)
+        var mixed = specs
+        mixed[2].format = .tiff8
+        let result = await ExportRun.run(inputs: [a], specs: mixed, root: root)
+        XCTAssertTrue(result.failures.isEmpty)
+        XCTAssertEqual(result.written.map(\.lastPathComponent), ["a.jpg", "a.jpg", "a.tif"])
+        XCTAssertTrue(FileManager.default.fileExists(atPath: root.appending(path: "facebook/a.tif").path))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: root.appending(path: "facebook/a.jpg").path))
+    }
+
     func testOneInputSingular() async {
         let a = Fixtures.make(width: 1600, height: 1200, name: "a", in: dir)
         let result = await ExportRun.run(inputs: [a], specs: specs, root: root)

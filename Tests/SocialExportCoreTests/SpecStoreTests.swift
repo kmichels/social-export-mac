@@ -27,6 +27,14 @@ final class SpecStoreTests: XCTestCase {
         XCTAssertEqual(store.load()[2].quality, 0.9)
     }
 
+    func testLegacyStoredSpecsLoadAsStored() {
+        defaults.set(Data(ExportSpecTests.legacyJSON.utf8), forKey: "exportSpecs")
+        let specs = SpecStore(defaults: defaults).load()
+        XCTAssertNotEqual(specs, ExportSpec.defaults, "legacy specs were replaced by defaults")
+        XCTAssertEqual(specs.map(\.quality), [0.85, 0.8, 0.85])
+        XCTAssertEqual(specs.map(\.format), [.jpeg, .jpeg, .jpeg])
+    }
+
     func testCorruptDataReturnsDefaults() {
         defaults.set(Data("nope".utf8), forKey: "exportSpecs")
         XCTAssertEqual(SpecStore(defaults: defaults).load(), ExportSpec.defaults)

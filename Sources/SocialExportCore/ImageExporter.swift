@@ -4,12 +4,15 @@ import ImageIO
 import UniformTypeIdentifiers
 
 /// Reads an image, bakes its EXIF orientation, converts to sRGB, resizes per a `SizeRule`, and writes a
-/// JPEG with no metadata. Decodes downsampled (never at full size) so large inputs stay cheap in memory.
+/// JPEG or an 8-bit uncompressed RGB TIFF with no metadata. Decodes downsampled (never at full size) so large
+/// inputs stay cheap in memory.
 public struct ImageExporter: Sendable {
     public let quality: Double
+    public let format: OutputFormat
 
-    public init(quality: Double) {
+    public init(quality: Double, format: OutputFormat = .jpeg) {
         self.quality = quality
+        self.format = format
     }
 
     /// Returns the written pixel size.
@@ -50,11 +53,25 @@ public struct ImageExporter: Sendable {
             guard let image = ctx.makeImage() else { throw ExportError.encodeFailed(destination) }
 
             try OutputPath.ensureDirectory(for: destination)
-            guard let dest = CGImageDestinationCreateWithURL(destination as CFURL, UTType.jpeg.identifier as CFString, 1, nil)
+            let (type, properties) = encoding
+            guard let dest = CGImageDestinationCreateWithURL(destination as CFURL, type.identifier as CFString, 1, nil)
             else { throw ExportError.write(destination, "cannot create image destination") }
-            CGImageDestinationAddImage(dest, image, [kCGImageDestinationLossyCompressionQuality: quality] as CFDictionary)
+            // The context is 8-bit noneSkipLast: ImageIO writes 3 samples per pixel and drops the skip byte,
+            // so neither format gains an alpha channel. No source properties are copied (metadata stays out).
+            CGImageDestinationAddImage(dest, image, properties as CFDictionary)
             guard CGImageDestinationFinalize(dest) else { throw ExportError.encodeFailed(destination) }
             return target
+        }
+    }
+
+    /// Destination type and per-image properties. TIFF compression is set explicitly to none (1) so a change in
+    /// ImageIO's default cannot silently make the "lossless" option compressed or lossy.
+    private var encoding: (UTType, [CFString: Any]) {
+        switch format {
+        case .jpeg:
+            (.jpeg, [kCGImageDestinationLossyCompressionQuality: quality])
+        case .tiff8:
+            (.tiff, [kCGImagePropertyTIFFDictionary: [kCGImagePropertyTIFFCompression: 1]])
         }
     }
 }

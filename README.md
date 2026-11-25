@@ -1,10 +1,10 @@
 # Social Export
 
-A macOS app with a Share extension that turns photos into ready-to-post JPEGs for Instagram, Threads
+A macOS app with a Share extension that turns photos into ready-to-post images for Instagram, Threads
 and Facebook in one step.
 
 Select photos in Photos (or image files in Finder), choose Share > Social Export, and the extension
-writes one correctly sized sRGB JPEG per platform into `~/Pictures/Socials/<platform>/`. There is no
+writes one correctly sized sRGB JPEG (or, per platform, an 8-bit TIFF) per platform into `~/Pictures/Socials/<platform>/`. There is no
 window to click through. When the run finishes you get one notification saying how many photos were
 exported, or which file failed and why.
 
@@ -26,11 +26,11 @@ Signed and notarized builds, with automatic updates: <https://apps.tonalphoto.co
 
 ## Default export recipes
 
-| Platform  | Size                  | JPEG quality |
-|-----------|-----------------------|--------------|
-| Instagram | 1080 px wide          | 0.85         |
-| Threads   | 1080 px wide          | 0.85         |
-| Facebook  | 2048 px longest edge  | 0.95 (0.85 up to 1.0.2) |
+| Platform  | Size                  | Format | JPEG quality |
+|-----------|-----------------------|--------|--------------|
+| Instagram | 1080 px wide          | JPEG   | 0.85         |
+| Threads   | 1080 px wide          | JPEG   | 0.85         |
+| Facebook  | 2048 px longest edge  | JPEG   | 0.95 (0.85 up to 1.0.2) |
 
 For every platform:
 
@@ -38,8 +38,19 @@ For every platform:
   than the target is re-encoded at its own size.
 - Output is converted to sRGB, with the EXIF orientation baked into the pixels.
 - Metadata is stripped: no GPS, camera, date, IPTC or XMP. An sRGB ICC profile is embedded.
-- The output file keeps the input's base name with a `.jpg` extension. Exporting the same name again
-  overwrites the earlier file.
+- The output file keeps the input's base name with a `.jpg` (or `.tif`) extension. Exporting the same
+  name again overwrites the earlier file.
+
+### TIFF output (since 1.0.4)
+
+Each platform can write an 8-bit TIFF instead of a JPEG: RGB, uncompressed, no alpha channel, with
+the same sizing, sRGB conversion and metadata stripping. The quality setting does not apply. Lossless
+uploads avoid a JPEG encode before the platform re-encodes the image, at the cost of larger files
+(about 8 MB for a 3:2 photo at 2048 px). Facebook accepted uncompressed TIFF uploads in testing;
+Instagram and Threads have not been tested.
+
+Photos usually hands a Share extension a JPEG it has exported, not the original file, so TIFF output
+then only avoids a second lossy encode. Sharing the original file from Finder avoids that.
 
 The recipes are editable in the app's window, and "Reset to defaults" restores the table above. Values
 you have saved are kept across updates.
@@ -73,7 +84,9 @@ One performance test is skipped by default; run it with `SOCIAL_EXPORT_PERF=1 sw
 ## Diagnostics
 
 - Unified log: `log show --predicate 'subsystem == "com.tonalphoto.socialexport"' --last 10m`
-- Each run of the extension also appends one line to `~/Pictures/Socials/.social-export.log`.
+- Each run of the extension also appends one line to `~/Pictures/Socials/.social-export.log`, including
+  what it received for each input (type, pixel size, file size, and for JPEGs the chroma subsampling
+  and quantization summary).
 
 ## Licence
 

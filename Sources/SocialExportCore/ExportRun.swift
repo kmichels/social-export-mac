@@ -85,7 +85,7 @@ public enum ExportRun {
             for spec in specs {
                 let destination = OutputPath.url(root: root, spec: spec, inputFilename: input.lastPathComponent)
                 do {
-                    let size = try ImageExporter(quality: spec.quality).export(source: input, to: destination, rule: spec.rule)
+                    let size = try ImageExporter(quality: spec.quality, format: spec.format).export(source: input, to: destination, rule: spec.rule)
                     written.append(destination)
                     logger.info("wrote \(destination.path, privacy: .public) \(size.width)x\(size.height)")
                 } catch let error as ExportError {
@@ -115,7 +115,7 @@ public enum ExportRun {
     private static func describe(_ error: ExportError) -> String {
         switch error {
         case .unreadable: "not a readable image"
-        case .encodeFailed: "could not encode JPEG"
+        case .encodeFailed: "could not encode image"
         case .write(_, let reason): reason
         case .cancelled: "cancelled"
         }

@@ -9,10 +9,10 @@ public enum ExportError: Error, Equatable, Sendable {
 }
 
 public enum OutputPath {
-    /// `root/<spec.folder>/<input stem>.jpg`. The stem keeps interior dots; only the last extension is dropped.
+    /// `root/<spec.folder>/<input stem>.<jpg|tif>`. The stem keeps interior dots; only the last extension is dropped.
     public static func url(root: URL, spec: ExportSpec, inputFilename: String) -> URL {
         let stem = (inputFilename as NSString).deletingPathExtension
-        return root.appending(path: spec.folder).appending(path: stem + ".jpg")
+        return root.appending(path: spec.folder).appending(path: stem + "." + spec.format.fileExtension)
     }
 
     /// Creates the parent directory of `url` (and intermediates). Errors map to `ExportError.write`.

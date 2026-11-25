@@ -91,6 +91,13 @@ private struct SpecSection: View {
         )
     }
 
+    /// TIFF upload acceptance was tested only on Facebook (2048 px, Nov 2026); say so rather than imply it works.
+    private var tiffNote: String {
+        spec.id == "facebook"
+            ? "TIFF files are lossless and larger (about 8 MB for a 3:2 photo at 2048 px). Facebook accepted uncompressed TIFF in testing."
+            : "TIFF files are lossless and larger. TIFF uploads to \(spec.id.capitalized) have not been tested."
+    }
+
     var body: some View {
         Section(spec.id.capitalized) {
             Picker("Rule", selection: ruleKind) {
@@ -98,9 +105,20 @@ private struct SpecSection: View {
                 Text("Longest edge").tag(1)
             }
             TextField("Pixels", value: pixelsBinding, format: .number.grouping(.never))
-            HStack {
-                Slider(value: $spec.quality, in: 0.5...1.0, step: 0.01) { Text("JPEG quality") }
-                Text(spec.quality, format: .number.precision(.fractionLength(2))).monospacedDigit()
+            Picker("Format", selection: $spec.format) {
+                Text("JPEG").tag(OutputFormat.jpeg)
+                Text("TIFF (8-bit, uncompressed)").tag(OutputFormat.tiff8)
+            }
+            switch spec.format {
+            case .jpeg:
+                HStack {
+                    Slider(value: $spec.quality, in: 0.5...1.0, step: 0.01) { Text("JPEG quality") }
+                    Text(spec.quality, format: .number.precision(.fractionLength(2))).monospacedDigit()
+                }
+            case .tiff8:
+                Text(tiffNote)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
     }
